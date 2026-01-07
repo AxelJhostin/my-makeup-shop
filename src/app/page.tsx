@@ -1,3 +1,4 @@
+// src/app/page.tsx
 import { supabase } from "@/lib/supabase";
 import { Product, ProductVariant } from "@/types/database"; 
 

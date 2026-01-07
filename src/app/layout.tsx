@@ -1,3 +1,4 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 // 1. Importamos las fuentes
 import { Playfair_Display, Nunito } from "next/font/google";

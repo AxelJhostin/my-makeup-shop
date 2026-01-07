@@ -1,3 +1,4 @@
+// tailwind.config.ts
 import type { Config } from "tailwindcss"
 import defaultTheme from "tailwindcss/defaultTheme"
 // 1. Importamos el plugin como un módulo normal
