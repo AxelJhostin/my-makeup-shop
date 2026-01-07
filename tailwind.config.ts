@@ -1,11 +1,10 @@
-// tailwind.config.ts
 import type { Config } from "tailwindcss"
 import defaultTheme from "tailwindcss/defaultTheme"
-// 1. Importamos el plugin como un módulo normal
 import tailwindAnimate from "tailwindcss-animate"
 
 const config = {
-  darkMode: "class",
+  // CORRECCIÓN AQUÍ: Usamos string simple en lugar de array
+  darkMode: "class", 
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
@@ -33,7 +32,7 @@ const config = {
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
-        ring: "#DB2777",
+        ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
@@ -70,7 +69,7 @@ const config = {
         body: ["var(--font-nunito)", ...defaultTheme.fontFamily.sans],
       },
       borderRadius: {
-        lg: "0.75rem",
+        lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
         xl: "1rem",
@@ -91,7 +90,6 @@ const config = {
       },
     },
   },
-  // 2. Usamos la variable importada aquí
   plugins: [tailwindAnimate],
 } satisfies Config
 

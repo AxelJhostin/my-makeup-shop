@@ -1,14 +1,11 @@
-// src/app/layout.tsx
 import type { Metadata } from "next";
-// 1. Importamos las fuentes
 import { Playfair_Display, Nunito } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 
-// 2. Configuramos las instancias
 const playfair = Playfair_Display({ 
   subsets: ["latin"],
-  variable: "--font-playfair", // Esta variable se usa en tailwind.config
+  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -19,8 +16,8 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Makeup Store",
-  description: "Tienda de maquillaje premium",
+  title: "Glowify - Belleza Manabita",
+  description: "Tienda de maquillaje premium en Jipijapa",
 };
 
 export default function RootLayout({
@@ -30,8 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      {/* 3. Inyectamos las variables en el body y aplicamos colores base */}
-      <body className={`${playfair.variable} ${nunito.variable} bg-brand-background text-brand-text font-body antialiased`}>
+      <body className={`${playfair.variable} ${nunito.variable} bg-brand-background text-brand-text font-body antialiased selection:bg-brand-primary selection:text-white`}>
         <Navbar />
         {children}
       </body>
