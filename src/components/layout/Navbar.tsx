@@ -15,12 +15,11 @@ export function Navbar() {
           </Button>
         </div>
 
-        {/* 2. Logo (Centro en mobile, Izquierda en Desktop) */}
+        {/* 2. Logo MEINE ESSENZ */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            {/* Simulamos un logo con texto por ahora */}
             <span className="font-heading text-2xl font-bold text-brand-primary tracking-tighter">
-              GLOW<span className="text-brand-text">IFY</span>
+              MEINE <span className="text-brand-text">ESSENZ</span>
             </span>
           </Link>
         </div>

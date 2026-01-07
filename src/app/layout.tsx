@@ -16,8 +16,8 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Glowify - Belleza Manabita",
-  description: "Tienda de maquillaje premium en Jipijapa",
+  title: "Meine Essenz - Belleza Manabita",
+  description: "Tienda de maquillaje premium en Jipijapa. Labiales, sombras y cuidado personal.",
 };
 
 export default function RootLayout({
