@@ -1,3 +1,4 @@
+// src/app/%28shop%29/layout.tsx
 import { Navbar } from "@/components/layout/Navbar";
 
 // Nota: Ya no importamos globals.css ni fuentes aquí porque el Root Layout (padre) ya lo hace.

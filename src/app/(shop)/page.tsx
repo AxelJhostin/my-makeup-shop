@@ -1,3 +1,4 @@
+// src/app/%28shop%29/page.tsx
 import { supabase } from "@/lib/supabase";
 import { Product, ProductVariant } from "@/types/database"; 
 import { ProductCard } from "@/components/products/ProductCard";
