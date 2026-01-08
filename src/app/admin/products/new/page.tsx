@@ -57,12 +57,11 @@ export default function NewProductPage() {
       router.push("/admin");
       router.refresh();
 
-    } catch (error) {
-      // --- CORRECCIÓN AQUÍ ---
-      // En lugar de 'any', verificamos si es una instancia de Error
-      console.error(error);
-      const message = error instanceof Error ? error.message : "Error desconocido";
-      alert("Error: " + message);
+    } catch (error: any) {
+      console.error("Error capturado:", error);
+      // Truco: Si el error tiene mensaje, úsalo. Si no, conviértelo a texto para leerlo.
+      const message = error.message || error.error_description || JSON.stringify(error);
+      alert("DETALLE DEL ERROR: " + message);
     } finally {
       setIsLoading(false);
     }
