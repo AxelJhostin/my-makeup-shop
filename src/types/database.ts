@@ -16,6 +16,7 @@ export type Database = {
           name: string
           description: string | null
           is_active: boolean
+          category: string
         }
         Insert: {
           id?: string
@@ -23,6 +24,7 @@ export type Database = {
           name: string
           description?: string | null
           is_active?: boolean
+          category?: string
         }
         Update: {
           id?: string
@@ -30,6 +32,7 @@ export type Database = {
           name?: string
           description?: string | null
           is_active?: boolean
+          category?: string
         }
       }
       product_variants: {

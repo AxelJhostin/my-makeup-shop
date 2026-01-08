@@ -1,68 +1,101 @@
-// src/components/layout/Navbar.tsx
+"use client";
+
 import Link from "next/link";
-import { Search, ShoppingBag, User, Menu } from "lucide-react";
+import { Search, ShoppingBag, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+// Importamos el Store del carrito y el hook para evitar errores
+import { useCartStore } from "@/store/cart";
+import { useMounted } from "@/hooks/use-mounted";
 
 export function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Conectamos con el Carrito
+  const { openSideMenu, items } = useCartStore();
+  const isMounted = useMounted();
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-brand-secondary/30 bg-brand-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-brand-background/60">
-      <div className="container flex h-16 items-center justify-between px-4">
+    <nav className="sticky top-0 z-40 w-full border-b border-brand-secondary/20 bg-brand-background/80 backdrop-blur-md">
+      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         
-        {/* 1. Menú Mobile (Izquierda) */}
-        <div className="md:hidden">
-          <Button variant="ghost" size="icon" className="text-brand-text">
-            <Menu className="h-6 w-6" />
-          </Button>
+        {/* LOGO */}
+        <Link href="/" className="flex items-center gap-2">
+          <span className="font-heading text-2xl font-bold tracking-tight text-brand-primary">
+            Meine<span className="text-brand-text">Essenz</span>
+          </span>
+        </Link>
+
+        {/* MENÚ ESCRITORIO (Aquí están los nuevos links) */}
+        <div className="hidden md:flex md:items-center md:gap-8">
+          <Link href="/" className="text-sm font-medium text-brand-text hover:text-brand-primary transition-colors">
+            Inicio
+          </Link>
+          <Link href="/catalog" className="text-sm font-medium text-brand-text hover:text-brand-primary transition-colors">
+            Todo el Catálogo
+          </Link>
+          <Link href="/catalog?category=maquillaje" className="text-sm font-medium text-brand-text hover:text-brand-primary transition-colors">
+            Maquillaje
+          </Link>
+          <Link href="/catalog?category=skincare" className="text-sm font-medium text-brand-text hover:text-brand-primary transition-colors">
+            Skincare
+          </Link>
         </div>
 
-        {/* 2. Logo MEINE ESSENZ */}
+        {/* ICONOS Y CARRITO */}
         <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="font-heading text-2xl font-bold text-brand-primary tracking-tighter">
-              MEINE <span className="text-brand-text">ESSENZ</span>
-            </span>
-          </Link>
-        </div>
-
-        {/* 3. Navegación Desktop (Centro) */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-brand-text/80">
-          <Link href="/catalog" className="hover:text-brand-primary transition-colors">
-            Catálogo
-          </Link>
-          <Link href="/categories/lips" className="hover:text-brand-primary transition-colors">
-            Labios
-          </Link>
-          <Link href="/categories/eyes" className="hover:text-brand-primary transition-colors">
-            Ojos
-          </Link>
-          <Link href="/about" className="hover:text-brand-primary transition-colors">
-            Sobre Nosotros
-          </Link>
-        </nav>
-
-        {/* 4. Iconos de Acción (Derecha) */}
-        <div className="flex items-center gap-2">
-          {/* Buscador */}
-          <Button variant="ghost" size="icon" className="text-brand-text hover:text-brand-primary hover:bg-brand-secondary/20">
+          <Button variant="ghost" size="icon" className="text-brand-text hover:text-brand-primary hover:bg-brand-secondary/10">
             <Search className="h-5 w-5" />
             <span className="sr-only">Buscar</span>
           </Button>
-
-          {/* Perfil */}
-          <Button variant="ghost" size="icon" className="text-brand-text hover:text-brand-primary hover:bg-brand-secondary/20 hidden sm:flex">
-            <User className="h-5 w-5" />
-            <span className="sr-only">Perfil</span>
+          
+          {/* BOTÓN DEL CARRITO */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-brand-text hover:text-brand-primary hover:bg-brand-secondary/10 relative"
+            onClick={openSideMenu}
+          >
+            <ShoppingBag className="h-5 w-5" />
+            
+            {/* Contador rojo del carrito */}
+            {isMounted && items.length > 0 && (
+              <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand-primary text-[10px] font-bold text-white animate-in zoom-in">
+                {items.reduce((acc, item) => acc + item.quantity, 0)}
+              </span>
+            )}
+            
+            <span className="sr-only">Carrito</span>
           </Button>
 
-          {/* Carrito (Con badge de cantidad simulado) */}
-          <Button variant="ghost" size="icon" className="relative text-brand-text hover:text-brand-primary hover:bg-brand-secondary/20">
-            <ShoppingBag className="h-5 w-5" />
-            {/* Badge hardcodeado por ahora */}
-            <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-brand-accent border-2 border-brand-background"></span>
-            <span className="sr-only">Carrito</span>
+          {/* Botón Menú Móvil */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden text-brand-text"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </div>
-    </header>
+
+      {/* MENÚ MÓVIL (Actualizado también) */}
+      {isMenuOpen && (
+        <div className="border-t md:hidden bg-brand-background">
+          <div className="flex flex-col space-y-4 p-4">
+             <Link href="/catalog" className="text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                Ver Todo
+             </Link>
+             <Link href="/catalog?category=maquillaje" className="text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                Maquillaje
+             </Link>
+             <Link href="/catalog?category=skincare" className="text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                Skincare
+             </Link>
+          </div>
+        </div>
+      )}
+    </nav>
   );
 }
