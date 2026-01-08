@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Nunito } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/layout/Navbar";
 
 const playfair = Playfair_Display({ 
   subsets: ["latin"],
@@ -16,8 +15,8 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Meine Essenz - Belleza Manabita",
-  description: "Tienda de maquillaje premium en Jipijapa. Labiales, sombras y cuidado personal.",
+  title: "Meine Essenz",
+  description: "Tienda de maquillaje",
 };
 
 export default function RootLayout({
@@ -27,8 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${playfair.variable} ${nunito.variable} bg-brand-background text-brand-text font-body antialiased selection:bg-brand-primary selection:text-white`}>
-        <Navbar />
+      <body className={`${playfair.variable} ${nunito.variable} bg-brand-background text-brand-text font-body antialiased`}>
         {children}
       </body>
     </html>
