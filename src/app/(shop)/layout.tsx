@@ -1,8 +1,8 @@
-// src/app/%28shop%29/layout.tsx
+// src/app/(shop)/layout.tsx
 import { Navbar } from "@/components/layout/Navbar";
+import { CartSidebar } from "@/components/cart/CartSidebar"; // <--- 1. Importamos
 
 // Nota: Ya no importamos globals.css ni fuentes aquí porque el Root Layout (padre) ya lo hace.
-// Tampoco ponemos <html> ni <body>.
 
 export default function ShopLayout({
   children,
@@ -12,6 +12,7 @@ export default function ShopLayout({
   return (
     <>
       <Navbar />
+      <CartSidebar /> {/* <--- 2. Lo colocamos aquí, "flotando" sobre todo */}
       <main className="min-h-screen">
         {children}
       </main>
