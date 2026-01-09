@@ -1,3 +1,4 @@
+// src/components/products/ProductCard.tsx
 "use client";
 
 import { Product, ProductVariant } from "@/types/database";

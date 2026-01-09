@@ -1,3 +1,4 @@
+// src/app/%28shop%29/catalog/page.tsx
 import { ProductCard } from "@/components/products/ProductCard";
 import { getProducts } from "@/services/products";
 import { Metadata } from "next";

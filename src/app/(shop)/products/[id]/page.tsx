@@ -1,3 +1,4 @@
+// src/app/%28shop%29/products/%5Bid%5D/page.tsx
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import { ProductView } from "@/components/products/ProductView";

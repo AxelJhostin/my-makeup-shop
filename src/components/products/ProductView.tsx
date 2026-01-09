@@ -1,3 +1,4 @@
+// src/components/products/ProductView.tsx
 "use client";
 
 import { useState } from "react";

@@ -1,3 +1,4 @@
+// src/components/cart/CartSidebar.tsx
 "use client";
 
 import { useCartStore } from "@/store/cart";

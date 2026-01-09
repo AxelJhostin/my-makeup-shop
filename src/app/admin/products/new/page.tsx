@@ -57,10 +57,19 @@ export default function NewProductPage() {
       router.push("/admin");
       router.refresh();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error capturado:", error);
-      // Truco: Si el error tiene mensaje, úsalo. Si no, conviértelo a texto para leerlo.
-      const message = error.message || error.error_description || JSON.stringify(error);
+      
+      // Intentamos obtener el mensaje de error de varias formas
+      let message = "Error desconocido";
+      if (error instanceof Error) {
+        message = error.message;
+      } else if (typeof error === "object" && error !== null) {
+        // A veces Supabase devuelve objetos con 'message' o 'error_description'
+        message = error.message || error.error_description || JSON.stringify(error);
+      }
+
       alert("DETALLE DEL ERROR: " + message);
     } finally {
       setIsLoading(false);
