@@ -2,31 +2,29 @@ import { supabase } from "@/lib/supabase";
 import { Package, Search, Filter, Calendar, User } from "lucide-react";
 import { OrderStatusSelector } from "@/components/admin/OrderStatusSelector";
 
-// Forzamos que la página sea dinámica para ver siempre los pedidos nuevos
 export const revalidate = 0; 
 
-// Definimos el tipo para manejar el JOIN con profiles
+// 1. Corregimos la Interfaz (Quitamos 'username' porque no existe)
 interface OrderWithProfile {
   id: string;
   created_at: string;
   status: string;
   total: number;
-  // Supabase devuelve los joins como un objeto o array
   profiles: {
     full_name: string | null;
-    username: string | null;
-    email?: string; // Si tienes email en profiles
+    // Quitamos username de aquí
   } | null;
 }
 
 export default async function AdminOrders() {
-  // 1. Consulta con JOIN a la tabla profiles
-  // Nota: Asegúrate de que en Supabase exista la Foreign Key entre orders.user_id y profiles.id
+  
+  // 2. Corregimos la Consulta
+  // Quitamos 'username' del select y usamos la relación simplificada
   const { data, error } = await supabase
     .from('orders')
     .select(`
       *,
-      profiles ( full_name, username )
+      profiles ( full_name )
     `)
     .order('created_at', { ascending: false });
 
@@ -81,7 +79,8 @@ export default async function AdminOrders() {
                     day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
                 });
                 
-                const clientName = order.profiles?.full_name || order.profiles?.username || "Cliente Anónimo";
+                // 3. Corregimos la visualización del nombre
+                const clientName = order.profiles?.full_name || "Cliente Anónimo";
 
                 return (
                   <tr key={order.id} className="hover:bg-slate-50/50 transition-colors">
@@ -106,7 +105,6 @@ export default async function AdminOrders() {
                       ${order.total.toFixed(2)}
                     </td>
                     <td className="px-6 py-4">
-                      {/* Aquí usamos el componente interactivo */}
                       <OrderStatusSelector orderId={order.id} currentStatus={order.status} />
                     </td>
                   </tr>
