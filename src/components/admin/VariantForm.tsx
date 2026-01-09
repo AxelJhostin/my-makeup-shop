@@ -9,8 +9,8 @@ import { createVariant } from "@/services/products";
 
 interface VariantFormProps {
   productId: string;
-  defaultPrice?: number; // Para sugerir el precio base
-  onSuccess: () => void; // Avisar al padre que recargue
+  defaultPrice?: number;
+  onSuccess: () => void;
 }
 
 export function VariantForm({ productId, defaultPrice, onSuccess }: VariantFormProps) {
@@ -42,12 +42,17 @@ export function VariantForm({ productId, defaultPrice, onSuccess }: VariantFormP
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (parseFloat(formData.price) < 0 || parseInt(formData.stock) < 0) {
+        alert("El precio y el stock deben ser positivos.");
+        return;
+    }
+
     setLoading(true);
     try {
       await createVariant(productId, formData);
       alert("¡Variante agregada!");
       
-      // Limpiar formulario
       setFormData({
         colorName: "",
         colorHex: "#000000",
@@ -57,11 +62,10 @@ export function VariantForm({ productId, defaultPrice, onSuccess }: VariantFormP
         previewUrl: null
       });
       
-      // Avisar al padre
       onSuccess();
+    
     } catch (error) {
       console.error(error);
-      // Verificamos si 'error' es una instancia real de Error para leer el mensaje de forma segura
       const message = error instanceof Error ? error.message : "Ocurrió un error desconocido";
       alert("Error: " + message);
     } finally {
@@ -76,7 +80,6 @@ export function VariantForm({ productId, defaultPrice, onSuccess }: VariantFormP
       </h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* NOMBRE Y COLOR */}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>Nombre Color</Label>
@@ -91,19 +94,17 @@ export function VariantForm({ productId, defaultPrice, onSuccess }: VariantFormP
           </div>
         </div>
 
-        {/* PRECIO Y STOCK */}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>Precio ($)</Label>
-            <Input name="price" type="number" step="0.01" value={formData.price} onChange={handleChange} required />
+            <Input name="price" type="number" step="0.01" min="0" value={formData.price} onChange={handleChange} required />
           </div>
           <div className="space-y-2">
             <Label>Stock</Label>
-            <Input name="stock" type="number" value={formData.stock} onChange={handleChange} required />
+            <Input name="stock" type="number" min="0" value={formData.stock} onChange={handleChange} required />
           </div>
         </div>
 
-        {/* IMAGEN */}
         <div className="space-y-2">
           <Label>Foto</Label>
           <div className="flex gap-4 items-center">

@@ -29,6 +29,10 @@ const uploadProductImage = async (file: File) => {
 
 // --- FUNCIÓN PRINCIPAL ---
 export const createProduct = async (input: CreateProductInput) => {
+  // --- VALIDACIÓN DE SEGURIDAD ---
+  if (parseFloat(input.price) < 0) throw new Error("El precio no puede ser negativo.");
+  if (parseInt(input.stock) < 0) throw new Error("El stock no puede ser negativo.");
+  // -------------------------------
   // 1. Subir imagen
   let imageUrl = null;
   if (input.imageFile) {
@@ -117,8 +121,11 @@ export const getProductById = async (productId: string) => {
 };
 
 // 2. Agregar una NUEVA variante (color) a un producto existente
-// 2. Agregar una NUEVA variante (color) a un producto existente
 export const createVariant = async (productId: string, input: any) => {
+  // --- VALIDACIÓN DE SEGURIDAD ---
+  if (parseFloat(input.price) < 0) throw new Error("El precio no puede ser negativo.");
+  if (parseInt(input.stock) < 0) throw new Error("El stock no puede ser negativo.");
+  // -------------------------------
   // Subir imagen si existe (Reusamos la lógica de subida)
   let imageUrl = null;
   if (input.imageFile) {

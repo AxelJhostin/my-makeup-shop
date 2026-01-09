@@ -1,3 +1,4 @@
+// src/app/admin/products/new/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -42,14 +43,23 @@ export default function NewProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 1. VALIDACIONES PREVIAS
+    if (!formData.name || !formData.price) {
+      alert("Nombre y precio son obligatorios");
+      return;
+    }
+
+    // Validación de negativos
+    if (parseFloat(formData.price) < 0 || parseInt(formData.stock) < 0) {
+      alert("El precio y el stock no pueden ser negativos.");
+      return;
+    }
+
+    // 2. INICIAR CARGA
     setIsLoading(true);
 
     try {
-      if (!formData.name || !formData.price) {
-        alert("Nombre y precio son obligatorios");
-        return;
-      }
-
       // --- LÓGICA MODULARIZADA ---
       await createProduct(formData);
 
@@ -57,17 +67,18 @@ export default function NewProductPage() {
       router.push("/admin");
       router.refresh();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error capturado:", error);
       
-      // Intentamos obtener el mensaje de error de varias formas
+      // Manejo seguro de errores sin usar 'any' explícito
       let message = "Error desconocido";
       if (error instanceof Error) {
         message = error.message;
       } else if (typeof error === "object" && error !== null) {
-        // A veces Supabase devuelve objetos con 'message' o 'error_description'
-        message = error.message || error.error_description || JSON.stringify(error);
+        // Casting seguro para intentar leer errores complejos de Supabase
+        message = (error as { message?: string; error_description?: string }).message 
+          || (error as { message?: string; error_description?: string }).error_description 
+          || JSON.stringify(error);
       }
 
       alert("DETALLE DEL ERROR: " + message);
