@@ -1,129 +1,96 @@
-// src/app/admin/page.tsx
-import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import { Plus, Pencil, Package } from "lucide-react"; // Borré Trash2 porque lo usa el botón componente
-import { Button } from "@/components/ui/button";
-import { DeleteProductButton } from "@/components/admin/DeleteProductButton"; 
+import { DollarSign, ShoppingBag, Package, TrendingUp, Clock } from "lucide-react";
+import Link from "next/link";
 
-export const revalidate = 0;
-
-// 1. DEFINIMOS EL TIPO DE DATO (El mapa para TypeScript)
-interface ProductWithVariants {
-  id: string;
-  name: string;
-  category: string;
-  variants: {
-    price: number;
-    stock_quantity: number;
-    image_url: string | null;
-  }[];
-}
+export const revalidate = 0; // Para que los datos siempre estén frescos
 
 export default async function AdminDashboard() {
-  // 2. HACEMOS LA CONSULTA Y APLICAMOS EL TIPO
-  const { data } = await supabase
-    .from('products')
-    .select(`
-      *,
-      variants:product_variants (price, stock_quantity, image_url)
-    `)
-    .order('created_at', { ascending: false });
+  // 1. Consultas en paralelo para que cargue rápido
+  const [productsQuery, ordersQuery] = await Promise.all([
+    supabase.from('products').select('*', { count: 'exact', head: true }),
+    supabase.from('orders').select('*', { count: 'exact', head: true })
+  ]);
 
-  // "Casteamos" los datos: Le decimos a TS "Confía en mí, esto es un array de productos"
-  const products = data as unknown as ProductWithVariants[] | null;
+  // 2. Extraer los conteos (si falla, ponemos 0)
+  const totalProducts = productsQuery.count || 0;
+  const totalOrders = ordersQuery.count || 0;
+  
+  // (Opcional) Calcular ventas totales si tienes órdenes reales
+  // Por ahora lo dejamos en 0 hasta que tengas ventas reales
+  const totalSales = 0; 
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-500">
       
-      {/* Encabezado */}
-      <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Inventario</h1>
-          <p className="text-slate-500">Gestiona tus productos ({products?.length || 0})</p>
+          <h1 className="text-3xl font-heading font-bold text-slate-900">Resumen</h1>
+          <p className="text-slate-500 mt-1">Lo que está pasando hoy en Glowify.</p>
         </div>
-        <Button asChild className="bg-brand-primary hover:bg-brand-primary/90 text-white gap-2">
-          <Link href="/admin/products/new">
-            <Plus className="h-4 w-4" /> Nuevo Producto
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2 text-sm text-slate-500 bg-white px-4 py-2 rounded-full border shadow-sm">
+            <Clock className="h-4 w-4" /> Actualizado: Recién
+        </div>
       </div>
 
-      {/* Tabla de Productos */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <table className="w-full text-left text-sm text-slate-600">
-          <thead className="bg-slate-50 text-slate-900 font-semibold border-b border-slate-200">
-            <tr>
-              <th className="px-6 py-4">Producto</th>
-              <th className="px-6 py-4">Categoría</th>
-              <th className="px-6 py-4">Precio</th>
-              <th className="px-6 py-4">Stock</th>
-              <th className="px-6 py-4 text-right">Acciones</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {products?.map((product) => {
-              // Tomamos la primera variante para mostrar datos de resumen
-              const mainVariant = product.variants?.[0];
-              
-              // 3. ARREGLAMOS EL REDUCE (Quitamos el 'any')
-              const totalStock = product.variants?.reduce((acc, v) => acc + v.stock_quantity, 0) || 0;
+      {/* Tarjetas de Métricas REALES */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        {/* Ventas (Simulado por ahora) */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group">
+            <div className="absolute right-0 top-0 h-24 w-24 bg-green-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+            <div className="relative">
+                <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">Ventas Totales</p>
+                <h3 className="text-3xl font-bold text-slate-900 mt-2">
+                    ${totalSales.toFixed(2)}
+                </h3>
+                <div className="mt-4 flex items-center text-sm font-medium text-green-600 bg-green-50 w-fit px-2 py-1 rounded-md">
+                    <TrendingUp className="h-4 w-4 mr-1" /> En crecimiento
+                </div>
+            </div>
+        </div>
 
-              return (
-                <tr key={product.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-lg border bg-slate-100 flex items-center justify-center overflow-hidden">
-                        {mainVariant?.image_url ? (
-                          <img src={mainVariant.image_url} alt={product.name} className="h-full w-full object-cover" />
-                        ) : (
-                          <Package className="h-5 w-5 text-slate-400" />
-                        )}
-                      </div>
-                      <span className="font-medium text-slate-900">{product.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 capitalize">
-                    <span className="px-2 py-1 rounded-full bg-slate-100 text-xs font-bold text-slate-600">
-                      {product.category || "General"}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 font-mono">
-                    ${mainVariant?.price?.toFixed(2) || "0.00"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {totalStock > 0 ? (
-                      <span className="text-green-600 font-bold">{totalStock} un.</span>
-                    ) : (
-                      <span className="text-red-500 font-bold">Agotado</span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      {/* Botón de Editar con LINK */}
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-brand-primary" asChild>
-                        <Link href={`/admin/products/${product.id}`}>
-                          <Pencil className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                      
-                      {/* Botón de Eliminar */}
-                      <DeleteProductButton productId={product.id} />
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+        {/* Órdenes (Dato Real) */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group">
+            <div className="absolute right-0 top-0 h-24 w-24 bg-blue-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+            <div className="relative">
+                <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">Pedidos</p>
+                <h3 className="text-3xl font-bold text-slate-900 mt-2">
+                    {totalOrders}
+                </h3>
+                <div className="mt-4 flex items-center text-sm font-medium text-blue-600 bg-blue-50 w-fit px-2 py-1 rounded-md">
+                    <ShoppingBag className="h-4 w-4 mr-1" /> Total histórico
+                </div>
+            </div>
+        </div>
 
-            {(!products || products.length === 0) && (
-              <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
-                  No hay productos aún. ¡Crea el primero!
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        {/* Inventario (Dato Real) */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group">
+            <div className="absolute right-0 top-0 h-24 w-24 bg-purple-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+            <div className="relative">
+                <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">Inventario</p>
+                <h3 className="text-3xl font-bold text-slate-900 mt-2">
+                    {totalProducts} <span className="text-lg text-slate-400 font-normal">prod.</span>
+                </h3>
+                <Link href="/admin/products" className="mt-4 inline-flex items-center text-sm font-medium text-purple-600 hover:text-purple-800">
+                    Gestionar catálogo <Package className="h-4 w-4 ml-1" />
+                </Link>
+            </div>
+        </div>
       </div>
+
+      {/* Sección de Relleno (Feedback) */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-10 text-center">
+        <div className="mx-auto h-16 w-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+             <ShoppingBag className="h-8 w-8 text-slate-400" />
+        </div>
+        <h3 className="text-lg font-bold text-slate-700">Listo para vender</h3>
+        <p className="text-slate-400 mt-2 max-w-md mx-auto">
+            Tu panel administrativo está conectado a la base de datos. 
+            Las métricas se actualizarán automáticamente cuando tus clientes compren.
+        </p>
+      </div>
+
     </div>
   );
 }
