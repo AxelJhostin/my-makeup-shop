@@ -23,12 +23,13 @@ const config = {
     extend: {
       colors: {
         brand: {
-          primary: "#DB2777",
-          secondary: "#E9D5FF",
-          accent: "#FB923C",
-          background: "#FFFCF9",
-          text: "#4A044E",
-          muted: "#A27da6",
+          // En lugar de códigos fijos, apuntamos a variables
+          primary: "var(--brand-primary)",
+          secondary: "var(--brand-secondary)",
+          accent: "var(--brand-accent)",
+          background: "var(--brand-background)",
+          text: "var(--brand-text)",
+          muted: "var(--brand-muted)",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

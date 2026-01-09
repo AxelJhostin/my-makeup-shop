@@ -1,156 +1,149 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Esta es la línea mágica que conecta tu config antiguo con v4 */
+@config "../../tailwind.config.ts";
 
-@theme inline {
-  /* --- 1. CONFIGURACIÓN DE FUENTES --- */
-  --font-heading: var(--font-playfair), ui-serif, Georgia, serif;
-  --font-body: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
-
-  /* --- 2. EXTENSIÓN DE COLORES DE MARCA --- */
-  /* Esto nos permite usar className="bg-brand-primary" */
-  --color-brand-primary: var(--brand-primary);
-  --color-brand-secondary: var(--brand-secondary);
-  --color-brand-accent: var(--brand-accent);
-  --color-brand-background: var(--brand-background);
-  --color-brand-text: var(--brand-text);
-  --color-brand-muted: var(--brand-muted);
-
-  /* --- 3. VARIABLES DE SHADCN (Mapeadas) --- */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+/* Mantenemos las variables de tema de Next.js si las tienes */
+@theme {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
-/* --- DEFINICIÓN DE VALORES (PALETA BELLEZA MANABITA) --- */
-:root {
-  /* Base del Sistema */
-  --radius: 0.75rem; /* Bordes más redondeados y amigables */
+/* AQUI DEBAJO DEJA TODO LO QUE YA TENÍAS DE SHADCN (@layer base { :root ... }) */
+@layer base {
+  :root {
+    /* ========================================================================
+       🎨 PALETA DE TEMAS (Descomenta el bloque que quieras usar)
+       ======================================================================== */
 
-  /* Colores BASE DE LA MARCA */
-  --brand-primary: #DB2777;    /* Pink 600 */
-  --brand-secondary: #E9D5FF;  /* Purple 200 */
-  --brand-accent: #FB923C;     /* Orange 400 */
-  --brand-background: #FFFCF9; /* Warm White */
-  --brand-text: #4A044E;       /* Dark Purple */
-  --brand-muted: #A27da6;      /* Muted Purple */
+    /* ------------------------------------------------------------------------
+       OPCIÓN 1: SELECCIÓN DEL CLIENTE (Vibrante & Atrevido) 💄
+       Basado en: #E91E63, #9C27B0, #FF6F00, #FAFAFA, #000000
+       ------------------------------------------------------------------------ */
+    
+    --brand-primary: #E91E63;      /* Rosa Fuerte (Botones, Precios) */
+    --brand-secondary: #9C27B0;    /* Morado (Detalles, Bordes suaves) */
+    --brand-accent: #FF6F00;       /* Naranja (Ofertas, Badges) */
+    --brand-background: #FAFAFA;   /* Blanco Humo (Fondo general) */
+    --brand-text: #000000;         /* Negro Puro (Títulos) */
+    --brand-muted: #757575;        /* Gris (Textos secundarios) */
+    
 
-  /* Mapeo a Shadcn (Tema Claro) */
-  --background: var(--brand-background);
-  --foreground: var(--brand-text);
+    /* ------------------------------------------------------------------------
+       OPCIÓN 2: PASTEL DREAM (Suave & Juvenil) 🌸
+       Tonos rosa chicle, crema y gris suave.
+       ------------------------------------------------------------------------ */
+    /*
+    --brand-primary: #FF8FAB;      
+    --brand-secondary: #FFC2D1;    
+    --brand-accent: #FFE5EC;       
+    --brand-background: #FFF0F3;   
+    --brand-text: #594A4E;         
+    --brand-muted: #9A8C98;        
+    */
 
-  --card: #FFFFFF;
-  --card-foreground: var(--brand-text);
+    /* ------------------------------------------------------------------------
+       OPCIÓN 3: LUXURY GOLD (Elegante & Premium) 💎
+       Negro, Dorado y Blanco. Ideal para marcas caras.
+       ------------------------------------------------------------------------ */
+    /*
+    --brand-primary: #D4AF37;      
+    --brand-secondary: #1A1A1A;    
+    --brand-accent: #000000;       
+    --brand-background: #FFFFFF;   
+    --brand-text: #171717;         
+    --brand-muted: #737373;        
+    */
 
-  --popover: #FFFFFF;
-  --popover-foreground: var(--brand-text);
+    /* ------------------------------------------------------------------------
+       OPCIÓN 4: NATURE ORGANIC (Fresco & Natural) 🌿
+       Verdes salvia, tierra y blancos. Ideal para skincare.
+       ------------------------------------------------------------------------ */
+    /*
+    --brand-primary: #5D8C76;      
+    --brand-secondary: #E2E8E4;    
+    --brand-accent: #D4A373;       
+    --brand-background: #F9F9F9;   
+    --brand-text: #2C3E50;         
+    --brand-muted: #7F8C8D;        
+    */
 
-  --primary: var(--brand-primary);
-  --primary-foreground: #FFFFFF;
 
-  --secondary: var(--brand-secondary);
-  --secondary-foreground: var(--brand-text);
+    /* ========================================================================
+       ⚙️ VARIABLES DEL SISTEMA (SHADCN UI & TAILWIND)
+       No tocar esto usualmente, se ajusta solo.
+       ======================================================================== */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-  --muted: #F3E8FF; /* Un morado muy pálido para fondos neutrales */
-  --muted-foreground: var(--brand-muted);
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-  --accent: var(--brand-accent);
-  --accent-foreground: #FFFFFF;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-  --destructive: #ef4444;
-  --destructive-foreground: #FFFFFF;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
 
-  --border: #E9D5FF; /* Bordes color lila suave */
-  --input: #E9D5FF;
-  --ring: var(--brand-primary);
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-  /* Variables de Gráficos (Opcional, se mantienen por si usas Charts) */
-  --chart-1: #DB2777;
-  --chart-2: #E9D5FF;
-  --chart-3: #FB923C;
-  --chart-4: #4A044E;
-  --chart-5: #FFFCF9;
-  
-  /* Sidebar (Opcional) */
-  --sidebar: var(--brand-background);
-  --sidebar-foreground: var(--brand-text);
-  --sidebar-primary: var(--brand-primary);
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: var(--brand-secondary);
-  --sidebar-accent-foreground: var(--brand-text);
-  --sidebar-border: var(--brand-secondary);
-  --sidebar-ring: var(--brand-primary);
-}
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-.dark {
-  /* Tema Oscuro (Invertido elegante para Maquillaje) */
-  --background: #2E0229; /* Morado muy oscuro */
-  --foreground: #FFFCF9;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
-  --card: #4A044E;
-  --card-foreground: #FFFCF9;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
-  --popover: #4A044E;
-  --popover-foreground: #FFFCF9;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
 
-  --primary: #DB2777;
-  --primary-foreground: #FFFFFF;
+    --radius: 0.5rem;
+  }
 
-  --secondary: #4A044E;
-  --secondary-foreground: #E9D5FF;
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-  --muted: #4A044E;
-  --muted-foreground: #E9D5FF;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
 
-  --accent: #FB923C;
-  --accent-foreground: #FFFFFF;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
 
-  --destructive: #7f1d1d;
-  --destructive-foreground: #FFFFFF;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
 
-  --border: #86198f;
-  --input: #86198f;
-  --ring: #DB2777;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-brand-background text-brand-text font-body;
   }
-  /* Forzamos estilos de tipografía global */
+  
+  /* Estilos para títulos */
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
   }
