@@ -1,3 +1,4 @@
+// src/services/products.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { supabase } from "@/lib/supabase";
 

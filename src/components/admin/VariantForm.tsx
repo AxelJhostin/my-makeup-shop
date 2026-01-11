@@ -1,3 +1,4 @@
+// src/components/admin/VariantForm.tsx
 "use client";
 
 import { useState } from "react";
